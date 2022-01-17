@@ -15,6 +15,10 @@ export default class Controller {
     this.model.bindTodosChanged(this.getAndDisplayTodos);
   }
 
+  handleAddTodo = () => {
+    this.view.displayModal();
+  }
+
   modelTodosToEntityTodos(todos) {
     return new Todos(
       todos.map((todo) => this.modelTodoToEntityTodo(todo)),
@@ -34,5 +38,6 @@ export default class Controller {
       todos_by_date: todos.todosByDate,
       done_todos_by_date: todos.doneTodosByDate,
     });
+    this.view.bindAddTodo(this.handleAddTodo)
   }
 }

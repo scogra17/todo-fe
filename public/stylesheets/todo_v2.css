@@ -30,7 +30,7 @@ body {
 #completed_todos header {
     margin-left: 0;
     padding-left: 100px
-    
+
 }
 #sidebar section.completed header{
     background-image: url('../images/completed.png');
@@ -322,8 +322,8 @@ input[type="checkbox"] + section {
 }
 #form_modal{
   display: none;
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 20%;
   left: 50%;
   margin-left: -287.5px;
   width: 575px;

@@ -27,48 +27,21 @@ export default class View {
     this.body.innerHTML = this.templates.main_template(data);
   }
 
+  displayModal() {
+    document.querySelector('#modal_layer').style.display = 'block';
+    document.querySelector('#form_modal').style.display = 'block';
+  }
+
   clearElementChildren(element) {
     while (element.firstChild) {
       element.removeChild(element.firstChild);
     }
   }
+
+  bindAddTodo(handler) {
+    document.querySelector('[for="new_item"]').addEventListener('click', (event) => {
+      handler();
+    })
+  }
 }
 
-
-    // this.itemPartial = Handlebars.registerPartial('item_partial',
-    //   Handlebars.compile(document.querySelector('#item_partial').innerHTML));
-
-    // // needs: todos.length
-    // this.allTodosTemplate = Handlebars.compile(
-    //   document.querySelector('#all_todos_template')
-    // )
-
-    // // needs: done.length
-    // this.completedTodosTemplate = Handlebars.compile(
-    //   document.querySelector('#completed_todos_template')
-    // )
-
-    // // needs: { todos_by_date: [ {length: , @key: } ] }
-    // this.allListTemplate = Handlebars.compile(
-    //   document.querySelector('#all_list_template')
-    // )
-
-    // // needs: { done_todos_by_date: [ {length: , @key: } ] }
-    // this.completedListTemplate = Handlebars.compile(
-    //   document.querySelector('#completed_list_template')
-    // )
-
-    // // needs: current_section: { title: , data: }
-    // this.titleTemplate = Handlebars.compile(
-    //   document.querySelector('#title_template')
-    // )
-
-    // // needs: { selected = [] }
-    // // partials used: itemPartial
-    // this.listTemplate = Handlebars.compile(
-    //   document.querySelector('#list_template')
-    // )
-
-    // this.mainTemplate = Handlebars.compile(
-    //   document.querySelector('#main_template').innerHTML
-    // );
