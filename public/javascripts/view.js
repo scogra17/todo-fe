@@ -1,6 +1,6 @@
 export default class View {
   constructor() {
-    this.body = this.querySelector('body');
+    this.body = document.querySelector('body');
     this.templates = {};
     this.getTemplates();
   }
@@ -13,8 +13,27 @@ export default class View {
       this.templates[template.id] = Handlebars.compile(template.innerHTML);
     });
 
+    partials.forEach(partial => {
+      Handlebars.registerPartial(partial.id, partial.innerHTML);
+    });
 
+    console.log(templates);
+    console.log(partials);
   }
+
+  displayTodos(data) {
+    this.clearElementChildren(this.body);
+    console.log(data);
+    this.body.innerHTML = this.templates.main_template(data);
+  }
+
+  clearElementChildren(element) {
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+  }
+}
+
 
     // this.itemPartial = Handlebars.registerPartial('item_partial',
     //   Handlebars.compile(document.querySelector('#item_partial').innerHTML));
@@ -53,4 +72,3 @@ export default class View {
     // this.mainTemplate = Handlebars.compile(
     //   document.querySelector('#main_template').innerHTML
     // );
-}

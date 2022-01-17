@@ -5,13 +5,14 @@ export default class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
+    this.dataPayload = {};
 
-    this.displayTodos();
+    this.getAndDisplayTodos();
     this.bindEvents();
   }
 
   bindEvents() {
-    this.model.bindTodosChanged(this.displayTodos);
+    this.model.bindTodosChanged(this.getAndDisplayTodos);
   }
 
   modelTodosToEntityTodos(todos) {
@@ -22,8 +23,16 @@ export default class Controller {
 
   modelTodoToEntityTodo(todo) { return new Todo(todo); }
 
-  displayTodos = async () => {
+  getAndDisplayTodos = async () => {
     this.model.todos = await this.model.getTodos();
-    console.log(this.modelTodosToEntityTodos(this.model.todos));
+    const todos = this.modelTodosToEntityTodos(this.model.todos);
+    this.view.displayTodos({
+      current_section: { title: "Test", data: "21" },
+      todos: todos.todos,
+      done: todos.done,
+      selected: todos.selected(),
+      todos_by_date: todos.todosByDate,
+      done_todos_by_date: todos.doneTodosByDate,
+    });
   }
 }
