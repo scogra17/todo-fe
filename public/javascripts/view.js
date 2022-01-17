@@ -32,15 +32,35 @@ export default class View {
     document.querySelector('#form_modal').style.display = 'block';
   }
 
+  hideModal() {
+    document.querySelector('#modal_layer').style.display = 'none';
+    document.querySelector('#form_modal').style.display = 'none';
+  }
+
   clearElementChildren(element) {
     while (element.firstChild) {
       element.removeChild(element.firstChild);
     }
   }
 
+  bindCloseModal(handler) {
+    document.querySelector('#modal_layer').addEventListener('click', (event) => {
+      handler();
+    })
+  }
+
   bindAddTodo(handler) {
     document.querySelector('[for="new_item"]').addEventListener('click', (event) => {
       handler();
+    })
+  }
+
+  bindDeleteTodo(handler) {
+    document.querySelector('#selected_todos').addEventListener('click', (event) => {
+      if (event.target.classList.contains('delete')) {
+        const todoID = Number(event.target.parentElement.getAttribute('data-id'));
+        handler(todoID);
+      }
     })
   }
 }

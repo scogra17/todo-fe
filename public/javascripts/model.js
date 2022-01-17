@@ -20,7 +20,12 @@ export default class Model {
 
   async editTodo(todo) {}
 
-  async deleteTodo(id) {}
+  async deleteTodo(id) {
+    await fetch(`${DOMAIN}/api/todos/${id}`, {
+      method: 'DELETE',
+    })
+    this.onTodosChanged();
+  }
 
   bindTodosChanged(handler) {
     this.onTodosChanged = handler;
