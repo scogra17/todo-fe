@@ -11,9 +11,13 @@ export default class Controller {
   }
 
   getAndDisplayTodos = async () => {
-    this.model.todos = await this.model.getTodos();
-    this.todos = mappers.modelTodosToEntityTodos(this.model.todos);
-    this.displayTodos(this.todos);
+    try {
+      this.model.todos = await this.model.getTodos();
+      this.todos = mappers.modelTodosToEntityTodos(this.model.todos);
+      this.displayTodos(this.todos);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   displayTodos = (todos) => {
@@ -38,20 +42,35 @@ export default class Controller {
     this.displayTodos(this.todos);
   }
 
-  handleToggleTodoCompleteness = (id) => {
+  handleToggleTodoCompleteness = async (id) => {
     const todo = this.todos.getTodo(id);
     todo.toggleComplete();
-    this.model.editTodo(todo.toJSON());
+    try {
+      this.model.editTodo(todo.toJSON());
+    } catch (err) {
+      console.log(err);
+      this.getAndDisplayTodos();
+    }
   }
 
-  handleSaveTodo = (todoJSON) => {
+  handleSaveTodo = async (todoJSON) => {
     const todo = new Todo(todoJSON);
     if (!todo.isValid()) {
       alert(todo.validationErrors());
     } else if (todo.existsInDB()) {
-      this.model.editTodo(todo.toJSON());
+      try {
+        await this.model.editTodo(todo.toJSON());
+      } catch (err) {
+        console.log(err);
+        this.getAndDisplayTodos();
+      }
     } else {
-      this.model.createTodo(todo.toJSON());
+      try {
+        await this.model.createTodo(todo.toJSON());
+      } catch (err) {
+        console.log(err);
+        this.getAndDisplayTodos();
+      }
     }
   }
 
@@ -68,7 +87,12 @@ export default class Controller {
       alert('Cannot complete a todo that is not yet created!')
     } else {
       todo.toggleComplete();
-      this.model.editTodo(todo.toJSON());
+      try {
+        this.model.editTodo(todo.toJSON());
+      } catch (err) {
+        console.log(err);
+        this.getAndDisplayTodos();
+      }
     }
   }
 

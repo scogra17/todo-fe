@@ -6,46 +6,68 @@ export default class Model {
   }
 
   async getTodos() {
-    const response = await fetch(`${DOMAIN}/api/todos`, {
+    const url = `${DOMAIN}/api/todos`
+    const opts = {
       method: 'GET',
       headers: { 'Response-Type': 'json' },
-    });
+    }
+    const response = await fetch(url, opts);
+    if (!response.ok) {
+      let message = `HTTP error ${response.status} for resource ${url}`
+      throw new Error(message);
+    }
     const contacts = await response.json();
     return contacts;
   }
 
-  async getTodo(id) {}
-
   async createTodo(todo) {
-    const response = await fetch(`${DOMAIN}/api/todos`, {
+    const url = `${DOMAIN}/api/todos`;
+    const opts = {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
         'Response-Type': 'json',
       },
       body: JSON.stringify(todo),
-    });
+    }
+    const response = await fetch(url, opts);
+    if (!response.ok) {
+      let message = `HTTP error ${response.status} for resource ${url}`
+      throw new Error(message);
+    }
     await response.json();
     this.onTodosChanged();
   }
 
   async editTodo(todo) {
-    const response = await fetch(`${DOMAIN}/api/todos/${todo.id}`, {
+    const url = `${DOMAIN}/api/todos/${todo.id}`
+    const opts = {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
         'Response-Type': 'json',
       },
       body: JSON.stringify(todo),
-    })
+    }
+    const response = await fetch(url, opts);
+    if (!response.ok) {
+      let message = `HTTP error ${response.status} for resource ${url}`
+      throw new Error(message);
+    }
     await response.json();
     this.onTodosChanged();
   }
 
   async deleteTodo(id) {
-    await fetch(`${DOMAIN}/api/todos/${id}`, {
+    const url = `${DOMAIN}/api/todos/${id}`
+    const opts = {
       method: 'DELETE',
-    })
+    }
+    const response = await fetch(url, opts)
+    if (!response.ok) {
+      let message = `HTTP error ${response.status} for resource ${url}`
+      throw new Error(message);
+    }
     this.onTodosChanged();
   }
 
