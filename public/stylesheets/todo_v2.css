@@ -16,10 +16,6 @@ body {
   box-sizing: border-box;
 }
 
-#sidebar_toggle {
-  display: none;
-}
-
 #sidebar header{
   background: transparent url('../images/label.png') 0 7px no-repeat;
   margin-left: 100px;
@@ -347,11 +343,6 @@ input[type="checkbox"] + section {
   #sidebar{
     display: none;
   }
-
-  #sidebar_toggle:checked + #sidebar{
-    display: block;
-  }
-
 }
 
 .hidden {

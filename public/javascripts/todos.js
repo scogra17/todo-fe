@@ -1,7 +1,7 @@
 export default class Todos {
   constructor(todos) {
     this._todos = todos || [];
-    this.sortTodosByDate();
+    this.groupTodosByDate();
   }
 
   get todos() { return this._todos; }
@@ -21,7 +21,20 @@ export default class Todos {
     return this._todos.filter((t) => t.completed);
   }
 
+  sort() {
+    this._todos.sort((laterTodo, earlierTodo) => {
+      return earlierTodo.compare(laterTodo);
+    })
+  }
+
+  sortByDate() {
+    this._todos.sort((laterTodo, earlierTodo) => {
+      return earlierTodo.compareByDate(laterTodo);
+    })
+  }
+
   selected(dueDate, completedOnly) {
+    this.sort();
     let todos = this._todos;
     if (dueDate) {
       todos = todos.filter((todo) => todo.due_date === dueDate);
@@ -29,12 +42,11 @@ export default class Todos {
     if (completedOnly) {
       todos = todos.filter((todo) => todo.completed );
     }
-    return todos.sort((laterTodo, earlierTodo) => {
-      return earlierTodo.compare(laterTodo);
-    });
+    return todos;
   }
 
-  sortTodosByDate() {
+  groupTodosByDate() {
+    this.sortByDate();
     this._todosByDate = {};
     this._doneTodosByDate = {};
 

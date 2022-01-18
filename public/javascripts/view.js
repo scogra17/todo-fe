@@ -16,9 +16,6 @@ export default class View {
     partials.forEach(partial => {
       Handlebars.registerPartial(partial.id, partial.innerHTML);
     });
-
-    console.log(templates);
-    console.log(partials);
   }
 
   displayTodos(data) {
@@ -29,27 +26,17 @@ export default class View {
 
   displaySelectedHeadingHighlighted(dueDate, completedOnly) {
     let active;
-    if (!dueDate && !completedOnly) {
-      active = document.querySelector('#all_todos header');
-    }
-    if (!dueDate && completedOnly) {
-      active = document.querySelector('#completed_todos header');
-    }
-    if (dueDate && !completedOnly) {
-      active = document.querySelector(`#all_lists dl[data-title="${dueDate}"]`);
-    }
-    if (dueDate && completedOnly) {
-      active = document.querySelector(`#completed_lists dl[data-title="${dueDate}"]`);
-    }
+    if (!dueDate && !completedOnly) { active = document.querySelector('#all_todos header') }
+    if (!dueDate && completedOnly) { active = document.querySelector('#completed_todos header') }
+    if (dueDate && !completedOnly) { active = document.querySelector(`#all_lists dl[data-title="${dueDate}"]`) }
+    if (dueDate && completedOnly) { active = document.querySelector(`#completed_lists dl[data-title="${dueDate}"]`) }
     active.classList.toggle('active')
   }
 
   displayModal(todo) {
     const formModal = document.querySelector('#form_modal');
     this.clearModalForm(formModal);
-    if (todo) {
-      this.populateModalForm(todo, formModal);
-    }
+    if (todo) { this.populateModalForm(todo, formModal) }
     document.querySelector('#modal_layer').style.display = 'block';
     formModal.style.display = 'block';
   }
@@ -60,19 +47,17 @@ export default class View {
   }
 
   clearElementChildren(element) {
-    while (element.firstChild) {
-      element.removeChild(element.firstChild);
-    }
-  }
-
-  bindCloseModal(handler) {
-    document.querySelector('#modal_layer').addEventListener('click', (event) => {
-      handler();
-    })
+    while (element.firstChild) { element.removeChild(element.firstChild) }
   }
 
   bindAddTodo(handler) {
     document.querySelector('[for="new_item"]').addEventListener('click', (event) => {
+      handler();
+    })
+  }
+
+  bindCloseModal(handler) {
+    document.querySelector('#modal_layer').addEventListener('click', (event) => {
       handler();
     })
   }
@@ -113,36 +98,20 @@ export default class View {
     const elem = document.querySelector('#sidebar');
     elem.addEventListener('click', (event) => {
       if (event.target.matches('div #all_todos, div #all_todos *')) {
-        // if (this.activeHeading) { this.activeHeading.classList.toggle('active'); }
-        // this.activeHeading = event.target.closest('header');
-        // this.activeHeading.classList.toggle('active');
-        handler(dueDate, completedOnly);
-        return;
+        return handler(dueDate, completedOnly);
       }
       if (event.target.matches('div #completed_todos, div #completed_todos *')) {
-        // if (this.activeHeading) { this.activeHeading.classList.toggle('active'); }
-        // this.activeHeading = event.target.closest('header');
-        // this.activeHeading.classList.toggle('active');
         completedOnly = true;
-        handler(dueDate, completedOnly);
-        return;
+        return handler(dueDate, completedOnly);
       }
       if (event.target.matches('#all_lists dl, #all_lists dl *')) {
-        // if (this.activeHeading) { this.activeHeading.classList.toggle('active'); }
-        // this.activeHeading = event.target.closest('dl');
-        // this.activeHeading.classList.toggle('active');
         dueDate = event.target.closest('dl').getAttribute('data-title');
-        handler(dueDate, completedOnly);
-        return;
+        return handler(dueDate, completedOnly);
       }
       if (event.target.matches('#completed_lists dl, #completed_lists dl *')) {
-        // if (this.activeHeading) { this.activeHeading.classList.toggle('active'); }
-        // this.activeHeading = event.target.closest('dl');
-        // this.activeHeading.classList.toggle('active');
         completedOnly = true;
         dueDate = event.target.closest('dl').getAttribute('data-title');
-        handler(dueDate, completedOnly);
-        return;
+        return handler(dueDate, completedOnly);
       }
     })
   }
@@ -163,6 +132,8 @@ export default class View {
       handler(todo);
     })
   }
+
+  // helpers
 
   formDataToJson(formData) {
     const json = {};
@@ -200,4 +171,3 @@ export default class View {
     form.querySelector('#id').value = '';
   }
 }
-

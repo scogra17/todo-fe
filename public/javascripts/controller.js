@@ -1,63 +1,28 @@
 import Todo from "/javascripts/todo.js"
-import Todos from "/javascripts/todos.js"
+import mappers from "/javascripts/mappers.js"
 
 export default class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
-    this.dataPayload = {};
-    this.newYear = 2050;
 
     this.getAndDisplayTodos();
     this.model.bindTodosChanged(this.getAndDisplayTodos);
   }
 
-  modelTodosToEntityTodos(todos) {
-    return new Todos(
-      todos.map((todo) => this.modelTodoToEntityTodo(todo)),
-    );
-  }
-
-  modelTodoToEntityTodo(todo) { return new Todo(todo); }
-
   getAndDisplayTodos = async () => {
     this.model.todos = await this.model.getTodos();
-    this.todos = this.modelTodosToEntityTodos(this.model.todos);
+    this.todos = mappers.modelTodosToEntityTodos(this.model.todos);
     this.displayTodos(this.todos);
   }
 
   displayTodos = (todos, dueDate, completedOnly) => {
-    const selected = todos.selected(dueDate, completedOnly);
-    this.view.displayTodos({
-      dueDate: dueDate,
-      completedOnly: completedOnly,
-      current_section: { title: this.getTitle(dueDate, completedOnly), data: selected.length },
-      todos: todos.todos,
-      done: todos.done(),
-      selected: selected,
-      todos_by_date: todos.todosByDate,
-      done_todos_by_date: todos.doneTodosByDate,
-    });
+    this.view.displayTodos(mappers.todosToDataPayload(todos, dueDate, completedOnly));
     this.view.bindAddTodo(this.handleAddTodo)
     this.view.bindDeleteTodo(this.handleDeleteTodo);
     this.view.bindEditTodo(this.handleEditTodo);
     this.view.bindToggleTodoCompleteness(this.handleToggleTodoCompleteness);
-    this.view.bindNavigationLinks(this.handleNavigationLinks)
-  }
-
-  getTitle(dueDate, completedOnly) {
-    if (dueDate) { return dueDate }
-    return completedOnly ? "Completed" : "All todos"
-  }
-
-  handleNavigationLinks = (dueDate, completedOnly) => {
-    this.displayTodos(this.todos, dueDate, completedOnly);
-  }
-
-  handleToggleTodoCompleteness = (id) => {
-    const todo = this.todos.getTodo(id);
-    todo.toggleComplete();
-    this.model.editTodo(todo.toJSON());
+    this.view.bindNavigationLinks(this.handleChooseCategory)
   }
 
   handleAddTodo = () => {
@@ -65,6 +30,16 @@ export default class Controller {
     this.view.bindCloseModal(this.handleCloseModal);
     this.view.bindSaveTodo(this.handleSaveTodo);
     this.view.bindCompleteTodo(this.handleCompleteTodo);
+  }
+
+  handleChooseCategory = (dueDate, completedOnly) => {
+    this.displayTodos(this.todos, dueDate, completedOnly);
+  }
+
+  handleToggleTodoCompleteness = (id) => {
+    const todo = this.todos.getTodo(id);
+    todo.toggleComplete();
+    this.model.editTodo(todo.toJSON());
   }
 
   handleSaveTodo = (todoJSON) => {
@@ -96,11 +71,6 @@ export default class Controller {
     }
   }
 
-  handleCloseModal = () => {
-    this.view.hideModal();
-  }
-
-  handleDeleteTodo = (id) => {
-    this.model.deleteTodo(id);
-  }
+  handleCloseModal = () => { this.view.hideModal() }
+  handleDeleteTodo = (id) => { this.model.deleteTodo(id) }
 }

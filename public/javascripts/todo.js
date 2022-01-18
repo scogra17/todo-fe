@@ -7,15 +7,28 @@ export default class Todo {
     this.year = todo.year || '';
     this.description = todo.description || '';
     this.completed = todo.completed || false;
-    this.due_date = this.due_date();
+    this.due_date = this.dueDate() || 'No Due Date';
   }
 
   compare(laterTodo) {
-    if (this.completed && !laterTodo.completed || this.id > laterTodo.id) {
-      return -1;
+    if (this.completed != laterTodo.completed) {
+      return this.completed? -1 : 1;
     } else {
-      return 1;
+      return this.id > laterTodo.id ? -1 : 1;
     }
+  }
+
+  epoch() {
+    if (this.dueDate()) {
+      return new Date(this.year, this.month).getTime();
+    } else {
+      return Infinity;
+    }
+  }
+
+  compareByDate(laterTodo) {
+    if (laterTodo)
+    return this.epoch() > laterTodo.epoch() ? -1 : 1;
   }
 
   existsInDB() {
@@ -30,11 +43,9 @@ export default class Todo {
     this.completed = !this.completed;
   }
 
-  due_date() {
+  dueDate() {
     if (this.month && this.year) {
       return `${this.month}/${this.year.slice(2)}`;
-    } else {
-      return 'No Due Date';
     }
   }
 
