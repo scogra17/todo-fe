@@ -60,7 +60,6 @@ export default class Controller {
     this.view.bindCompleteTodo(this.handleCompleteTodo);
   }
 
-
   handleCompleteTodo = (todoJSON) => {
     const todo = new Todo(todoJSON);
     if (!todo.existsInDB()) {

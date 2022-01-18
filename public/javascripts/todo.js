@@ -8,6 +8,7 @@ export default class Todo {
     this.description = todo.description || '';
     this.completed = todo.completed || false;
     this.due_date = this.dueDate() || 'No Due Date';
+    this.epoch = this.epoch();
   }
 
   compare(laterTodo) {
@@ -18,17 +19,11 @@ export default class Todo {
     }
   }
 
-  epoch() {
-    if (this.dueDate()) {
-      return new Date(this.year, this.month).getTime();
-    } else {
-      return Infinity;
-    }
-  }
+  epoch() { return new Date(this.year, this.month).getTime() }
 
   compareByDate(laterTodo) {
     if (laterTodo)
-    return this.epoch() > laterTodo.epoch() ? -1 : 1;
+    return this.epoch > laterTodo.epoch ? -1 : 1;
   }
 
   existsInDB() {
