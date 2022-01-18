@@ -27,13 +27,14 @@ export default class Controller {
   }
 
   displayTodos = (todos, dueDate, completedOnly) => {
+    const selected = todos.selected(dueDate, completedOnly);
     this.view.displayTodos({
       dueDate: dueDate,
       completedOnly: completedOnly,
-      current_section: { title: "Test", data: "21" },
+      current_section: { title: this.getTitle(dueDate, completedOnly), data: selected.length },
       todos: todos.todos,
-      done: todos.done,
-      selected: todos.selected(dueDate, completedOnly),
+      done: todos.done(),
+      selected: selected,
       todos_by_date: todos.todosByDate,
       done_todos_by_date: todos.doneTodosByDate,
     });
@@ -42,6 +43,11 @@ export default class Controller {
     this.view.bindEditTodo(this.handleEditTodo);
     this.view.bindToggleTodoCompleteness(this.handleToggleTodoCompleteness);
     this.view.bindNavigationLinks(this.handleNavigationLinks)
+  }
+
+  getTitle(dueDate, completedOnly) {
+    if (dueDate) { return dueDate }
+    return completedOnly ? "Completed" : "All todos"
   }
 
   handleNavigationLinks = (dueDate, completedOnly) => {

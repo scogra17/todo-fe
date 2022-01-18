@@ -28,25 +28,20 @@ export default class View {
   }
 
   displaySelectedHeadingHighlighted(dueDate, completedOnly) {
-    // if (this.active) {
-    //   if (this.active.classList.contains('active')) {
-    //     this.active.classList.toggle('active');
-    //   }
-    // }
+    let active;
     if (!dueDate && !completedOnly) {
-      document.querySelector('#all_todos header').classList.toggle('active');
-      return;
+      active = document.querySelector('#all_todos header');
     }
     if (!dueDate && completedOnly) {
-      document.querySelector('#completed_todos header').classList.toggle('active');
+      active = document.querySelector('#completed_todos header');
     }
     if (dueDate && !completedOnly) {
-      document.querySelector(`#all_lists dl[data-title="${dueDate}"]`).classList.toggle('active');
+      active = document.querySelector(`#all_lists dl[data-title="${dueDate}"]`);
     }
     if (dueDate && completedOnly) {
-      document.querySelector(`#completed_lists dl[data-title="${dueDate}"]`).classList.toggle('active');
+      active = document.querySelector(`#completed_lists dl[data-title="${dueDate}"]`);
     }
-
+    active.classList.toggle('active')
   }
 
   displayModal(todo) {
