@@ -29,9 +29,14 @@ export default class View {
     document.querySelector('#year').appendChild(option)
   }
 
-  displayModal() {
+  displayModal(todo) {
+    const formModal = document.querySelector('#form_modal');
+    this.clearModalForm(formModal);
+    if (todo) {
+      this.populateModalForm(todo, formModal);
+    }
     document.querySelector('#modal_layer').style.display = 'block';
-    document.querySelector('#form_modal').style.display = 'block';
+    formModal.style.display = 'block';
   }
 
   hideModal() {
@@ -61,6 +66,26 @@ export default class View {
     const elem = document.querySelector('#selected_todos');
     elem.addEventListener('click', (event) => {
       if (event.target.matches('.delete, .delete *')) {
+        const todoID = Number(event.target.closest('tr').getAttribute('data-id'));
+        handler(todoID);
+      }
+    })
+  }
+
+  bindEditTodo(handler) {
+    const elem = document.querySelector('#selected_todos');
+    elem.addEventListener('click', (event) => {
+      if (event.target.matches('label[for^="item_"]')) {
+        const todoID = Number(event.target.closest('tr').getAttribute('data-id'));
+        handler(todoID);
+      }
+    })
+  }
+
+  bindToggleTodoCompleteness(handler) {
+    const elem = document.querySelector('#selected_todos');
+    elem.addEventListener('click', (event) => {
+      if (event.target.matches('.list_item, .list_item .check')) {
         const todoID = Number(event.target.closest('tr').getAttribute('data-id'));
         handler(todoID);
       }
@@ -100,6 +125,24 @@ export default class View {
     const formData = new FormData(form);
     const json = this.formDataToJson(formData);
     return json;
+  }
+
+  populateModalForm(data, form) {
+    form.querySelector('#title').value = data.title;
+    if (data.day) { form.querySelector('#day').value = data.day };
+    if (data.month) { form.querySelector('#month').value = data.month };
+    if (data.year) { form.querySelector('#year').value = data.year };
+    if (data.description) { form.querySelector('textarea[name="description"]').value = data.day };
+    if (data.id) { form.querySelector('#id').value = data.id }
+  }
+
+  clearModalForm(form) {
+    form.querySelector('#title').value = '';
+    form.querySelector('#day').value = '';
+    form.querySelector('#month').value = '';
+    form.querySelector('#year').value = '';
+    form.querySelector('textarea[name="description"]').value = '';
+    form.querySelector('#id').value = '';
   }
 }
 

@@ -22,7 +22,9 @@ export default class Todos {
   }
 
   selected() {
-    return this._todos;
+    return this._todos.sort((laterTodo, earlierTodo) => {
+      return earlierTodo.compare(laterTodo);
+    });
   }
 
   sortTodosByDate() {

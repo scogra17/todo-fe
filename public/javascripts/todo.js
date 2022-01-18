@@ -10,6 +10,14 @@ export default class Todo {
     this.due_date = this.due_date();
   }
 
+  compare(laterTodo) {
+    if (this.completed && !laterTodo.completed || this.id > laterTodo.id) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
+
   existsInDB() {
     return !!this.id
   }
@@ -19,11 +27,15 @@ export default class Todo {
   }
 
   toggleComplete() {
-    this.complete = !this.complete;
+    this.completed = !this.completed;
   }
 
   due_date() {
-    return `${this.month}/${this.year.slice(2)}`;
+    if (this.month && this.year) {
+      return `${this.month}/${this.year.slice(2)}`;
+    } else {
+      return 'No Due Date';
+    }
   }
 
   validationErrors() {
@@ -39,12 +51,12 @@ export default class Todo {
   toJSON() {
     const data = {
       title: this.title,
+      completed: this.completed,
     }
     if (this.id) { data.id = this.id };
     if (this.day) { data.day = this.day };
     if (this.month) { data.month = this.month };
     if (this.year) { data.year = this.year };
-    if (this.completed) { data.completed = this.completed };
     if (this.description) { data.description = this.description };
 
     return data;

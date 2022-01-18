@@ -22,8 +22,8 @@ export default class Controller {
 
   getAndDisplayTodos = async () => {
     this.model.todos = await this.model.getTodos();
-    const todos = this.modelTodosToEntityTodos(this.model.todos);
-    this.displayTodos(todos);
+    this.todos = this.modelTodosToEntityTodos(this.model.todos);
+    this.displayTodos(this.todos);
   }
 
   displayTodos = (todos) => {
@@ -39,6 +39,14 @@ export default class Controller {
     });
     this.view.bindAddTodo(this.handleAddTodo)
     this.view.bindDeleteTodo(this.handleDeleteTodo);
+    this.view.bindEditTodo(this.handleEditTodo);
+    this.view.bindToggleTodoCompleteness(this.handleToggleTodoCompleteness);
+  }
+
+  handleToggleTodoCompleteness = (id) => {
+    const todo = this.todos.getTodo(id);
+    todo.toggleComplete();
+    this.model.editTodo(todo.toJSON());
   }
 
   handleAddTodo = () => {
@@ -50,17 +58,30 @@ export default class Controller {
 
   handleSaveTodo = (todoJSON) => {
     const todo = new Todo(todoJSON);
-    if (todo.isValid()) {
-      this.model.createTodo(todo.toJSON());
-    } else {
+    if (!todo.isValid()) {
       alert(todo.validationErrors());
+    } else if (todo.existsInDB()) {
+      this.model.editTodo(todo.toJSON());
+    } else {
+      this.model.createTodo(todo.toJSON());
     }
   }
+
+  handleEditTodo = (id) => {
+    this.view.displayModal(this.todos.getTodo(id));
+    this.view.bindCloseModal(this.handleCloseModal);
+    this.view.bindSaveTodo(this.handleSaveTodo);
+    this.view.bindCompleteTodo(this.handleCompleteTodo);
+  }
+
 
   handleCompleteTodo = (todoJSON) => {
     const todo = new Todo(todoJSON);
     if (!todo.existsInDB()) {
       alert('Cannot complete a todo that is not yet created!')
+    } else {
+      todo.toggleComplete();
+      this.model.editTodo(todo.toJSON());
     }
   }
 

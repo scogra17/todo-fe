@@ -29,7 +29,18 @@ export default class Model {
     this.onTodosChanged();
   }
 
-  async editTodo(todo) {}
+  async editTodo(todo) {
+    const response = await fetch(`${DOMAIN}/api/todos/${todo.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        'Response-Type': 'json',
+      },
+      body: JSON.stringify(todo),
+    })
+    await response.json();
+    this.onTodosChanged();
+  }
 
   async deleteTodo(id) {
     await fetch(`${DOMAIN}/api/todos/${id}`, {
