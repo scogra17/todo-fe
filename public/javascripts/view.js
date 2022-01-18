@@ -30,7 +30,7 @@ export default class View {
     if (!dueDate && completedOnly) { active = document.querySelector('#completed_todos header') }
     if (dueDate && !completedOnly) { active = document.querySelector(`#all_lists dl[data-title="${dueDate}"]`) }
     if (dueDate && completedOnly) { active = document.querySelector(`#completed_lists dl[data-title="${dueDate}"]`) }
-    active.classList.toggle('active')
+    if (active) { active.classList.toggle('active') }
   }
 
   displayModal(todo) {

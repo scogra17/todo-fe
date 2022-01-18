@@ -16,8 +16,8 @@ export default class Controller {
     this.displayTodos(this.todos);
   }
 
-  displayTodos = (todos, dueDate, completedOnly) => {
-    this.view.displayTodos(mappers.todosToDataPayload(todos, dueDate, completedOnly));
+  displayTodos = (todos) => {
+    this.view.displayTodos(mappers.todosToDataPayload(todos, this.dueDate, this.completedOnly));
     this.view.bindAddTodo(this.handleAddTodo)
     this.view.bindDeleteTodo(this.handleDeleteTodo);
     this.view.bindEditTodo(this.handleEditTodo);
@@ -33,7 +33,9 @@ export default class Controller {
   }
 
   handleChooseCategory = (dueDate, completedOnly) => {
-    this.displayTodos(this.todos, dueDate, completedOnly);
+    this.dueDate = dueDate;
+    this.completedOnly = completedOnly;
+    this.displayTodos(this.todos);
   }
 
   handleToggleTodoCompleteness = (id) => {
