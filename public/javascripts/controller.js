@@ -26,21 +26,26 @@ export default class Controller {
     this.displayTodos(this.todos);
   }
 
-  displayTodos = (todos) => {
-    this.newYear += 1;
+  displayTodos = (todos, dueDate, completedOnly) => {
     this.view.displayTodos({
+      dueDate: dueDate,
+      completedOnly: completedOnly,
       current_section: { title: "Test", data: "21" },
       todos: todos.todos,
       done: todos.done,
-      selected: todos.selected(),
+      selected: todos.selected(dueDate, completedOnly),
       todos_by_date: todos.todosByDate,
       done_todos_by_date: todos.doneTodosByDate,
-      newYear: String(this.newYear),
     });
     this.view.bindAddTodo(this.handleAddTodo)
     this.view.bindDeleteTodo(this.handleDeleteTodo);
     this.view.bindEditTodo(this.handleEditTodo);
     this.view.bindToggleTodoCompleteness(this.handleToggleTodoCompleteness);
+    this.view.bindNavigationLinks(this.handleNavigationLinks)
+  }
+
+  handleNavigationLinks = (dueDate, completedOnly) => {
+    this.displayTodos(this.todos, dueDate, completedOnly);
   }
 
   handleToggleTodoCompleteness = (id) => {

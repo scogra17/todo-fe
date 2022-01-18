@@ -24,9 +24,29 @@ export default class View {
   displayTodos(data) {
     this.clearElementChildren(this.body);
     this.body.innerHTML = this.templates.main_template(data);
-    let option = document.createElement('option');
-    option.textContent = data.newYear;
-    document.querySelector('#year').appendChild(option)
+    this.displaySelectedHeadingHighlighted(data.dueDate, data.completedOnly);
+  }
+
+  displaySelectedHeadingHighlighted(dueDate, completedOnly) {
+    // if (this.active) {
+    //   if (this.active.classList.contains('active')) {
+    //     this.active.classList.toggle('active');
+    //   }
+    // }
+    if (!dueDate && !completedOnly) {
+      document.querySelector('#all_todos header').classList.toggle('active');
+      return;
+    }
+    if (!dueDate && completedOnly) {
+      document.querySelector('#completed_todos header').classList.toggle('active');
+    }
+    if (dueDate && !completedOnly) {
+      document.querySelector(`#all_lists dl[data-title="${dueDate}"]`).classList.toggle('active');
+    }
+    if (dueDate && completedOnly) {
+      document.querySelector(`#completed_lists dl[data-title="${dueDate}"]`).classList.toggle('active');
+    }
+
   }
 
   displayModal(todo) {
@@ -88,6 +108,46 @@ export default class View {
       if (event.target.matches('.list_item, .list_item .check')) {
         const todoID = Number(event.target.closest('tr').getAttribute('data-id'));
         handler(todoID);
+      }
+    })
+  }
+
+  bindNavigationLinks(handler) {
+    let dueDate;
+    let completedOnly;
+    const elem = document.querySelector('#sidebar');
+    elem.addEventListener('click', (event) => {
+      if (event.target.matches('div #all_todos, div #all_todos *')) {
+        // if (this.activeHeading) { this.activeHeading.classList.toggle('active'); }
+        // this.activeHeading = event.target.closest('header');
+        // this.activeHeading.classList.toggle('active');
+        handler(dueDate, completedOnly);
+        return;
+      }
+      if (event.target.matches('div #completed_todos, div #completed_todos *')) {
+        // if (this.activeHeading) { this.activeHeading.classList.toggle('active'); }
+        // this.activeHeading = event.target.closest('header');
+        // this.activeHeading.classList.toggle('active');
+        completedOnly = true;
+        handler(dueDate, completedOnly);
+        return;
+      }
+      if (event.target.matches('#all_lists dl, #all_lists dl *')) {
+        // if (this.activeHeading) { this.activeHeading.classList.toggle('active'); }
+        // this.activeHeading = event.target.closest('dl');
+        // this.activeHeading.classList.toggle('active');
+        dueDate = event.target.closest('dl').getAttribute('data-title');
+        handler(dueDate, completedOnly);
+        return;
+      }
+      if (event.target.matches('#completed_lists dl, #completed_lists dl *')) {
+        // if (this.activeHeading) { this.activeHeading.classList.toggle('active'); }
+        // this.activeHeading = event.target.closest('dl');
+        // this.activeHeading.classList.toggle('active');
+        completedOnly = true;
+        dueDate = event.target.closest('dl').getAttribute('data-title');
+        handler(dueDate, completedOnly);
+        return;
       }
     })
   }

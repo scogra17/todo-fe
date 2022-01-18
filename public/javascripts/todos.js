@@ -21,8 +21,15 @@ export default class Todos {
     return this._todos.filter((t) => t.completed);
   }
 
-  selected() {
-    return this._todos.sort((laterTodo, earlierTodo) => {
+  selected(dueDate, completedOnly) {
+    let todos = this._todos;
+    if (dueDate) {
+      todos = todos.filter((todo) => todo.due_date === dueDate);
+    }
+    if (completedOnly) {
+      todos = todos.filter((todo) => todo.completed );
+    }
+    return todos.sort((laterTodo, earlierTodo) => {
       return earlierTodo.compare(laterTodo);
     });
   }
