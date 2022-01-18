@@ -23,8 +23,10 @@ export default class View {
 
   displayTodos(data) {
     this.clearElementChildren(this.body);
-    console.log(data);
     this.body.innerHTML = this.templates.main_template(data);
+    let option = document.createElement('option');
+    option.textContent = data.newYear;
+    document.querySelector('#year').appendChild(option)
   }
 
   displayModal() {
@@ -56,12 +58,48 @@ export default class View {
   }
 
   bindDeleteTodo(handler) {
-    document.querySelector('#selected_todos').addEventListener('click', (event) => {
-      if (event.target.classList.contains('delete')) {
-        const todoID = Number(event.target.parentElement.getAttribute('data-id'));
+    const elem = document.querySelector('#selected_todos');
+    elem.addEventListener('click', (event) => {
+      if (event.target.matches('.delete, .delete *')) {
+        const todoID = Number(event.target.closest('tr').getAttribute('data-id'));
         handler(todoID);
       }
     })
+  }
+
+  bindSaveTodo(handler) {
+    document.querySelector('form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const todo = this.prepareFormData(document.querySelector('form'));
+      handler(todo);
+    })
+  }
+
+  bindCompleteTodo(handler) {
+    const elem = document.querySelector('[name=complete]');
+    elem.addEventListener('click', (event) => {
+      event.preventDefault();
+      const todo = this.prepareFormData(document.querySelector('form'));
+      handler(todo);
+    })
+  }
+
+  formDataToJson(formData) {
+    const json = {};
+    for (const pair of formData.entries()) {
+      if (json[pair[0]]) {
+        json[pair[0]] = [json[pair[0]], pair[1]].join(',');
+      } else {
+        json[pair[0]] = pair[1];
+      }
+    }
+    return json;
+  }
+
+  prepareFormData(form) {
+    const formData = new FormData(form);
+    const json = this.formDataToJson(formData);
+    return json;
   }
 }
 

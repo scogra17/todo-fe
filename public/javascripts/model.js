@@ -16,7 +16,18 @@ export default class Model {
 
   async getTodo(id) {}
 
-  async createTodo(todo) {}
+  async createTodo(todo) {
+    const response = await fetch(`${DOMAIN}/api/todos`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        'Response-Type': 'json',
+      },
+      body: JSON.stringify(todo),
+    });
+    await response.json();
+    this.onTodosChanged();
+  }
 
   async editTodo(todo) {}
 

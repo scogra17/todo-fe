@@ -6,6 +6,7 @@ export default class Controller {
     this.model = model;
     this.view = view;
     this.dataPayload = {};
+    this.newYear = 2050;
 
     this.getAndDisplayTodos();
     this.model.bindTodosChanged(this.getAndDisplayTodos);
@@ -26,6 +27,7 @@ export default class Controller {
   }
 
   displayTodos = (todos) => {
+    this.newYear += 1;
     this.view.displayTodos({
       current_section: { title: "Test", data: "21" },
       todos: todos.todos,
@@ -33,6 +35,7 @@ export default class Controller {
       selected: todos.selected(),
       todos_by_date: todos.todosByDate,
       done_todos_by_date: todos.doneTodosByDate,
+      newYear: String(this.newYear),
     });
     this.view.bindAddTodo(this.handleAddTodo)
     this.view.bindDeleteTodo(this.handleDeleteTodo);
@@ -41,6 +44,24 @@ export default class Controller {
   handleAddTodo = () => {
     this.view.displayModal();
     this.view.bindCloseModal(this.handleCloseModal);
+    this.view.bindSaveTodo(this.handleSaveTodo);
+    this.view.bindCompleteTodo(this.handleCompleteTodo);
+  }
+
+  handleSaveTodo = (todoJSON) => {
+    const todo = new Todo(todoJSON);
+    if (todo.isValid()) {
+      this.model.createTodo(todo.toJSON());
+    } else {
+      alert(todo.validationErrors());
+    }
+  }
+
+  handleCompleteTodo = (todoJSON) => {
+    const todo = new Todo(todoJSON);
+    if (!todo.existsInDB()) {
+      alert('Cannot complete a todo that is not yet created!')
+    }
   }
 
   handleCloseModal = () => {
