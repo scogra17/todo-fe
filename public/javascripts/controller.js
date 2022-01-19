@@ -1,5 +1,5 @@
-import Todo from "/javascripts/todo.js"
-import mappers from "/javascripts/mappers.js"
+import Todo from "/javascripts/todo.js";
+import mappers from "/javascripts/mappers.js";
 
 export default class Controller {
   constructor(model, view) {
@@ -21,18 +21,19 @@ export default class Controller {
   }
 
   displayTodos = (todos) => {
-    this.view.displayTodos(mappers.todosToDataPayload(todos, this.dueDate, this.completedOnly));
+    this.view.displayTodos(
+      mappers.todosToDataPayload(todos, this.dueDate, this.completedOnly)
+    );
     this.view.bindAddTodo(this.handleAddTodo);
     this.view.bindDeleteTodo(this.handleDeleteTodo);
     this.view.bindEditTodo(this.handleEditTodo);
     this.view.bindToggleTodoCompleteness(this.handleToggleTodoCompleteness);
-    this.view.bindNavigationLinks(this.handleChooseCategory)
+    this.view.bindNavigationLinks(this.handleChooseCategory);
   }
 
   handleAddTodo = () => {
     this.view.displayModal();
     this.view.bindCloseModal(this.handleCloseModal);
-    // this.view.bindSaveTodo(this.debounceLeading(this.handleSaveTodo, 300));
     this.view.bindSaveTodo(this.handleSaveTodo);
     this.view.bindCompleteTodo(this.handleCompleteTodo);
   }
@@ -47,7 +48,7 @@ export default class Controller {
     const todo = this.todos.getTodo(id);
     todo.toggleComplete();
     try {
-      this.model.editTodo(todo.toJSON());
+      await this.model.editTodo(todo.toJSON());
     } catch (err) {
       console.log(err);
       this.getAndDisplayTodos();
@@ -59,21 +60,29 @@ export default class Controller {
     if (!todo.isValid()) {
       alert(todo.validationErrors());
     } else if (todo.existsInDB()) {
-      try {
-        await this.model.editTodo(todo.toJSON());
-      } catch (err) {
-        console.log(err);
-        this.getAndDisplayTodos();
-      }
+      await this.editTodo(todo);
     } else {
-      try {
-        await this.model.createTodo(todo.toJSON());
-        this.completedOnly = false;
-        this.dueDate = undefined;
-      } catch (err) {
-        console.log(err);
-        this.getAndDisplayTodos();
-      }
+      await this.saveTodo(todo);
+    }
+  }
+
+  editTodo = async (todo) => {
+    try {
+      await this.model.editTodo(todo.toJSON());
+    } catch (err) {
+      console.log(err);
+      this.getAndDisplayTodos();
+    }
+  }
+
+  saveTodo = async (todo) => {
+    try {
+      await this.model.createTodo(todo.toJSON());
+      this.completedOnly = false;
+      this.dueDate = undefined;
+    } catch (err) {
+      console.log(err);
+      this.getAndDisplayTodos();
     }
   }
 
@@ -87,7 +96,7 @@ export default class Controller {
   handleCompleteTodo = (todoJSON) => {
     const todo = new Todo(todoJSON);
     if (!todo.existsInDB()) {
-      alert('Cannot complete a todo that is not yet created!')
+      alert('Cannot complete a todo that is not yet created!');
     } else {
       todo.toggleComplete();
       try {
@@ -101,18 +110,4 @@ export default class Controller {
 
   handleCloseModal = () => { this.view.hideModal() }
   handleDeleteTodo = (id) => { this.model.deleteTodo(id) }
-
-  debounceLeading = (func, timeout = 300) => {
-    let timer;
-    return (...args) => {
-      if (!timer) {
-        console.log(this);
-        func.apply(this, args);
-      }
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        timer = undefined;
-      }, timeout);
-    };
-  }
 }

@@ -7,14 +7,14 @@ export default class Model {
   }
 
   async getTodos() {
-    const url = `${DOMAIN}/api/todos`
+    const url = `${DOMAIN}/api/todos`;
     const opts = {
       method: 'GET',
       headers: { 'Response-Type': 'json' },
-    }
+    };
     const response = await fetch(url, opts);
     if (!response.ok) {
-      let message = `HTTP error ${response.status} for resource ${url}`
+      let message = `HTTP error ${response.status} for resource ${url}`;
       throw new Error(message);
     }
     const contacts = await response.json();
@@ -30,11 +30,11 @@ export default class Model {
         'Response-Type': 'json',
       },
       body: JSON.stringify(todo),
-    }
+    };
     if (!this.createTodoRunning) {
       const response = await fetch(url, opts);
       if (!response.ok) {
-        let message = `HTTP error ${response.status} for resource ${url}`
+        let message = `HTTP error ${response.status} for resource ${url}`;
         throw new Error(message);
       }
       await response.json();
@@ -43,7 +43,7 @@ export default class Model {
   }
 
   async editTodo(todo) {
-    const url = `${DOMAIN}/api/todos/${todo.id}`
+    const url = `${DOMAIN}/api/todos/${todo.id}`;
     const opts = {
       method: 'PUT',
       headers: {
@@ -51,10 +51,10 @@ export default class Model {
         'Response-Type': 'json',
       },
       body: JSON.stringify(todo),
-    }
+    };
     const response = await fetch(url, opts);
     if (!response.ok) {
-      let message = `HTTP error ${response.status} for resource ${url}`
+      let message = `HTTP error ${response.status} for resource ${url}`;
       throw new Error(message);
     }
     await response.json();
@@ -62,13 +62,13 @@ export default class Model {
   }
 
   async deleteTodo(id) {
-    const url = `${DOMAIN}/api/todos/${id}`
+    const url = `${DOMAIN}/api/todos/${id}`;
     const opts = {
       method: 'DELETE',
-    }
-    const response = await fetch(url, opts)
+    };
+    const response = await fetch(url, opts);
     if (!response.ok) {
-      let message = `HTTP error ${response.status} for resource ${url}`
+      let message = `HTTP error ${response.status} for resource ${url}`;
       throw new Error(message);
     }
     this.onTodosChanged();

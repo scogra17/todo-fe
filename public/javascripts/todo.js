@@ -1,3 +1,6 @@
+/* eslint-disable camelcase */
+/* eslint-disable max-statements-per-line */
+
 export default class Todo {
   constructor(todo) {
     this.id = todo.id;
@@ -12,8 +15,8 @@ export default class Todo {
   }
 
   compare(laterTodo) {
-    if (this.completed != laterTodo.completed) {
-      return this.completed? -1 : 1;
+    if (this.completed !== laterTodo.completed) {
+      return this.completed ? -1 : 1;
     } else {
       return this.id > laterTodo.id ? -1 : 1;
     }
@@ -22,16 +25,16 @@ export default class Todo {
   epoch() { return new Date(this.year, this.month).getTime() }
 
   compareByDate(laterTodo) {
-    if (laterTodo)
-    return this.epoch > laterTodo.epoch ? -1 : 1;
+    if (laterTodo) return this.epoch > laterTodo.epoch ? -1 : 1;
+    return undefined;
   }
 
   existsInDB() {
-    return !!this.id
+    return !!this.id;
   }
 
   isValid() {
-    return !this.titleValidationError()
+    return !this.titleValidationError();
   }
 
   toggleComplete() {
@@ -42,6 +45,7 @@ export default class Todo {
     if (this.month && this.year) {
       return `${this.month}/${this.year.slice(2)}`;
     }
+    return undefined;
   }
 
   validationErrors() {
@@ -50,20 +54,21 @@ export default class Todo {
 
   titleValidationError() {
     if (this.title.length < 3) {
-      return 'Title must be greater than 3 characters'
+      return 'Title must be greater than 3 characters';
     }
+    return undefined;
   }
 
   toJSON() {
     const data = {
       title: this.title,
       completed: this.completed,
-    }
-    if (this.id) { data.id = this.id };
-    if (this.day) { data.day = this.day };
-    if (this.month) { data.month = this.month };
-    if (this.year) { data.year = this.year };
-    if (this.description) { data.description = this.description };
+    };
+    if (this.id) { data.id = this.id }
+    if (this.day) { data.day = this.day }
+    if (this.month) { data.month = this.month }
+    if (this.year) { data.year = this.year }
+    if (this.description) { data.description = this.description }
 
     return data;
   }

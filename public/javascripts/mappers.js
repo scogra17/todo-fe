@@ -1,5 +1,7 @@
-import Todo from "/javascripts/todo.js"
-import Todos from "/javascripts/todos.js"
+/* eslint-disable camelcase */
+
+import Todo from "/javascripts/todo.js";
+import Todos from "/javascripts/todos.js";
 
 export default {
   modelTodosToEntityTodos: function(todos) {
@@ -17,17 +19,22 @@ export default {
     return {
       dueDate: dueDate,
       completedOnly: completedOnly,
-      current_section: { title: this.getTitle(dueDate, completedOnly), data: selected.length },
+      current_section: {
+        title: this.getTitle(dueDate, completedOnly),
+        data: selected.length,
+      },
       todos: todos.todos,
       done: todos.done(),
       selected: selected,
       todos_by_date: todos.todosByDate,
       done_todos_by_date: todos.doneTodosByDate,
-    }
+    };
   },
 
   getTitle: function(dueDate, completedOnly) {
-    if (dueDate) { return dueDate }
-    return completedOnly ? "Completed" : "All todos"
+    if (dueDate) {
+      return dueDate;
+    }
+    return completedOnly ? "Completed" : "All todos";
   }
-}
+};

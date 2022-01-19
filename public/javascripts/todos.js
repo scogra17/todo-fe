@@ -4,13 +4,14 @@ export default class Todos {
     this.groupTodosByDate();
   }
 
-  get todos() { return this._todos; }
-  get todosByDate() { return this._todosByDate; }
-  get doneTodosByDate() { return this._doneTodosByDate; }
+  get todos() { return this._todos }
+  get todosByDate() { return this._todosByDate }
+  get doneTodosByDate() { return this._doneTodosByDate }
 
   getTodo(id) {
-    const todo = this._todos.filter((t) => t.id == id);
+    const todo = this._todos.filter((td) => td.id === id);
     if (todo) return todo[0];
+    return undefined;
   }
 
   isEmpty() {
@@ -18,19 +19,19 @@ export default class Todos {
   }
 
   done() {
-    return this._todos.filter((t) => t.completed);
+    return this._todos.filter((todo) => todo.completed);
   }
 
   sort() {
     this._todos.sort((laterTodo, earlierTodo) => {
       return earlierTodo.compare(laterTodo);
-    })
+    });
   }
 
   sortByDate() {
     this._todos.sort((laterTodo, earlierTodo) => {
       return earlierTodo.compareByDate(laterTodo);
-    })
+    });
   }
 
   selected(dueDate, completedOnly) {
@@ -64,6 +65,6 @@ export default class Todos {
           this._doneTodosByDate[todo.due_date] = [todo];
         }
       }
-    })
+    });
   }
 }
