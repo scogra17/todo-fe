@@ -41,6 +41,10 @@ export default class Todo {
     this.completed = !this.completed;
   }
 
+  complete() {
+    this.completed = true;
+  }
+
   dueDate() {
     if (this.month && this.year) {
       return `${this.month}/${this.year.slice(2)}`;

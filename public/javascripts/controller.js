@@ -98,7 +98,7 @@ export default class Controller {
     if (!todo.existsInDB()) {
       alert('Cannot complete a todo that is not yet created!');
     } else {
-      todo.toggleComplete();
+      todo.complete();
       try {
         this.model.editTodo(todo.toJSON());
       } catch (err) {
