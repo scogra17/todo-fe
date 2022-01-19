@@ -198,7 +198,7 @@ header dt, header dd{
 table td input[type="checkbox"]:hover{
   cursor: normal;
 }
-table td input[type="checkbox"]:checked ~ label {
+table td input[type="checkbox"].checked ~ label {
   color: #b3b3b3;
   text-decoration: line-through;
 }
@@ -220,7 +220,7 @@ table .list_item .check {
   width: 15px;
 }
 
-table td input[type="checkbox"]:checked + .check {
+table td input[type="checkbox"].checked + .check {
     background-image: url("../images/checked.png");
 }
 .delete img:hover{

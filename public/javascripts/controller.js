@@ -34,7 +34,7 @@ export default class Controller {
   handleAddTodo = () => {
     this.view.displayModal();
     this.view.bindCloseModal(this.handleCloseModal);
-    this.view.bindSaveTodo(this.debounceLeading(this.handleSaveTodo, 300));
+    this.view.bindSaveTodo(this.debounceLeading(this.handleSaveTodo));
     this.view.bindCompleteTodo(this.handleCompleteTodo);
   }
 
