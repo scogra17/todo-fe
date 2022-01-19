@@ -181,6 +181,9 @@ export default class View {
     if (data.id) {
       form.querySelector('#id').value = data.id;
     }
+    if (data.completed) {
+      form.querySelector('#completed').value = data.completed;
+    }
   }
 
   clearModalForm(form) {
@@ -190,5 +193,6 @@ export default class View {
     form.querySelector('#year').value = '';
     form.querySelector('textarea[name="description"]').value = '';
     form.querySelector('#id').value = '';
+    form.querySelector('#completed').value = '';
   }
 }
