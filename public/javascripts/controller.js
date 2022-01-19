@@ -22,7 +22,7 @@ export default class Controller {
 
   displayTodos = (todos) => {
     this.view.displayTodos(mappers.todosToDataPayload(todos, this.dueDate, this.completedOnly));
-    this.view.bindAddTodo(this.handleAddTodo)
+    this.view.bindAddTodo(this.handleAddTodo);
     this.view.bindDeleteTodo(this.handleDeleteTodo);
     this.view.bindEditTodo(this.handleEditTodo);
     this.view.bindToggleTodoCompleteness(this.handleToggleTodoCompleteness);
@@ -32,6 +32,7 @@ export default class Controller {
   handleAddTodo = () => {
     this.view.displayModal();
     this.view.bindCloseModal(this.handleCloseModal);
+    // this.view.bindSaveTodo(this.debounceLeading(this.handleSaveTodo, 300));
     this.view.bindSaveTodo(this.handleSaveTodo);
     this.view.bindCompleteTodo(this.handleCompleteTodo);
   }
@@ -67,6 +68,8 @@ export default class Controller {
     } else {
       try {
         await this.model.createTodo(todo.toJSON());
+        this.completedOnly = false;
+        this.dueDate = undefined;
       } catch (err) {
         console.log(err);
         this.getAndDisplayTodos();
@@ -98,4 +101,18 @@ export default class Controller {
 
   handleCloseModal = () => { this.view.hideModal() }
   handleDeleteTodo = (id) => { this.model.deleteTodo(id) }
+
+  debounceLeading = (func, timeout = 300) => {
+    let timer;
+    return (...args) => {
+      if (!timer) {
+        console.log(this);
+        func.apply(this, args);
+      }
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = undefined;
+      }, timeout);
+    };
+  }
 }

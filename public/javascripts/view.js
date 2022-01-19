@@ -158,7 +158,7 @@ export default class View {
     if (data.day) { form.querySelector('#day').value = data.day };
     if (data.month) { form.querySelector('#month').value = data.month };
     if (data.year) { form.querySelector('#year').value = data.year };
-    if (data.description) { form.querySelector('textarea[name="description"]').value = data.day };
+    if (data.description) { form.querySelector('textarea[name="description"]').value = data.description };
     if (data.id) { form.querySelector('#id').value = data.id }
   }
 

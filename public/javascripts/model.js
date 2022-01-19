@@ -3,6 +3,7 @@ const DOMAIN = 'http://localhost:3000';
 export default class Model {
   constructor() {
     this.todos = [];
+    this.createTodoRunning = false; // To prevent multiple requests
   }
 
   async getTodos() {
@@ -30,13 +31,15 @@ export default class Model {
       },
       body: JSON.stringify(todo),
     }
-    const response = await fetch(url, opts);
-    if (!response.ok) {
-      let message = `HTTP error ${response.status} for resource ${url}`
-      throw new Error(message);
+    if (!this.createTodoRunning) {
+      const response = await fetch(url, opts);
+      if (!response.ok) {
+        let message = `HTTP error ${response.status} for resource ${url}`
+        throw new Error(message);
+      }
+      await response.json();
+      this.onTodosChanged();
     }
-    await response.json();
-    this.onTodosChanged();
   }
 
   async editTodo(todo) {
